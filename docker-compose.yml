@@ -3,22 +3,14 @@ version: "3.9"
 services:
   splunk:
     image: splunk/splunk:latest
-    container_name: splunk
-    hostname: splunk
-    ports:
-      - "8000:8000" # Exposes the Splunk web interface
-      - "9997:9997" # Opens the dedicated TCP port for receiving data from forwarders
-      - "8089:8089" # Exposes the Splunk API
+    container_name: splunk_siem
     environment:
-      - SPLUNK_START_ARGS=--accept-license
-      - SPLUNK_PASSWORD=ChangeMe!
-      - SPLUNK_ENABLE_LISTEN=9997
-    volumes:
-      - ./splunk/etc:/opt/splunk/etc
-      - ./splunk/var:/opt/splunk/var
-    networks:
-      - labnet
-
-networks:
-  labnet:
-    driver: bridge
+      SPLUNK_GENERAL_TERMS: "--accept-sgt-current-at-splunk-com"
+      SPLUNK_START_ARGS: "--accept-license"
+      SPLUNK_PASSWORD: "StrongPassword123!" # Replace with a secure password
+      SPLUNK_ENABLE_LISTEN: "9997"
+    ports:
+      - "8000:8000"
+      - "9997:9997"
+      - "8089:8089"
+    restart: unless-stopped
